@@ -9,6 +9,17 @@ self.webView.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewCon
 self.automaticallyAdjustsScrollViewInsets = NO;
 }
 ```
+实现alert弹窗拦截
+```objc
+// 实现如下协议
+@protocol LYSCommonWebJavaScriptDelegate <NSObject>
+
+- (void)ly_webView:(LYSCommonWebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(CGRect *)frame;
+- (BOOL)ly_webView:(LYSCommonWebView *)sender runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(CGRect *)frame;
+
+@end
+```
+
 方式一:
 
 ```objc
