@@ -8,8 +8,15 @@
 
 #import "ViewController.h"
 #import "LYSCommonWeb.h"
+#import <JavaScriptCore/JavaScriptCore.h>
 
-@interface ViewController ()
+@protocol LYSCommonWebKitActionDelegate <JSExport>
+
+- (id)addValue:(id)obj;
+
+@end
+
+@interface ViewController ()<LYSCommonWebKitActionDelegate>
 @property (nonatomic, strong) LYSCommonWeb *webView;
 @end
 
@@ -30,18 +37,16 @@
     
     [self.webView ly_loadUrl:@"http://0.0.0.0:8080"];
     
-    [self.webView ly_addAsynAction:@selector(addValue:) target:self name:@"addValue"];
+    [self.webView ly_addExtendName:@"ios" target:self];
     
 }
 
-- (void)addValue:(LYSBridgeInfo *)info
+- (id)addValue:(id)obj
 {
-    NSLog(@"收到响应数据: %@",info);
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.webView ly_evaluateResponse:@{
-                                         @"result": @"ios  to  vue!!"
-                                         } success:YES message:@"success!" bridge:info];
-    });
+    NSLog(@"收到响应数据: %@", obj);
+    return @{
+             @"result": @"ios  to vue!!!"
+             };
 }
 
 @end

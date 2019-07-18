@@ -20,7 +20,7 @@
       return
     }
     if (!window.android && !window.ios) {
-      msg.message = '请确认运行环境在"集客"App中'
+      msg.message = 'API不存在!!'
       callback(msg)
       return
     }

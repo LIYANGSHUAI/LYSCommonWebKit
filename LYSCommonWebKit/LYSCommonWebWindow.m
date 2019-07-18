@@ -48,9 +48,6 @@
             void *retrunvalue = NULL;
             [invocation setArgument:&obj atIndex:2];
             [invocation invoke];
-            
-            NSLog(@"%s",invocation.methodSignature.methodReturnType);
-            
             if (invocation.methodSignature.methodReturnLength != 0) {
                 [invocation getReturnValue:&retrunvalue];
             }

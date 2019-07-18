@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div @click="clickAction" class="btn">点击{{name}}</div>
+    <div @click="clickAction" class="btn">点击</div>
   </div>
 </template>
 
@@ -12,25 +12,9 @@ export default {
       name: ''
     }
   },
-  created () {
-    let obj = window.addValue('vue  to  ios!!!')
-    this.name = obj.name
-  },
-  mounted () {
-
-  },
   methods: {
     clickAction: function () {
-      // window.JsBridgeBind('addValue', function (res) {
-      //   console.log(res)
-      // }, {
-      //   params: 'vue  to  ios!!!'
-      // })
-
-      // console.log(window.addValue('vue  to  ios!!!'))
-
-      let obj = window.addValue('vue  to  ios!!!')
-      this.name = obj.name
+      console.log(window.ios.addValue('vue  to  ios!!'))
     }
   }
 }

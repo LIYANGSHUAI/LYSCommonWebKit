@@ -47,7 +47,6 @@
 
 - (void)callNativeBridgeApi:(id)obj
 {
-    NSLog(@"%@",obj);
     __weak LYSCommonWebBridge *WeakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *bridgeName = obj[@"bridgeName"];
