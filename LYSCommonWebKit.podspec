@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
 s.platform       = :ios
   s.license      = "MIT"
   s.author             = { "LIYANGSHUAI" => "liyangshuai163@163.com" }
-  s.source       = { :git => "https://github.com/LIYANGSHUAI/LYSCommonWebKit.git", :tag => s.version }
+s.source       = { :git => "https://github.com/LIYANGSHUAI/LYSCommonWebKit.git", :tag => "{s.version}" }
   s.source_files  = "LYSCommonWebKit/*.{h,m}"
 end
