@@ -10,6 +10,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ if (@available(iOS 11.0, *)) {
+ self.webView.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+ } else {
+ self.automaticallyAdjustsScrollViewInsets = NO;
+ }
+ */
+
 @interface LYSCommonWeb : LYSCommonWebWindow
 
 @end

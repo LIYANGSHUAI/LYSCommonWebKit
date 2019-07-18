@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LYSCommonWebView.h"
 #import <JavaScriptCore/JavaScriptCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,10 +24,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LYSCommonWebUI : UIView<LYSCommonWebAPIDelegate>
 
-@property (nonatomic, strong, readonly) UIWebView *webView;
+@property (nonatomic, strong, readonly) LYSCommonWebView *webView;
+@property (nonatomic, assign) id<LYSCommonWebJavaScriptDelegate> jsDelegate;
 @property (nonatomic, strong, readonly) JSContext *context;
 
-- (void)loadUrl:(NSString *)urlStr;
+/**
+ 加载网页地址
+
+ @param urlStr 网页url
+ */
+- (void)ly_loadUrl:(NSString *)urlStr;
+
 @end
 
 NS_ASSUME_NONNULL_END

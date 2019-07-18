@@ -11,6 +11,7 @@
 @interface LYSCommonWebWindow ()
 
 @property (nonatomic, strong) NSMutableDictionary *callActionDict;
+@property (nonatomic, strong) NSMutableDictionary *extendNameDict;
 @property (nonatomic, strong) NSMutableArray *extendNameArr;
 
 @end
@@ -25,51 +26,48 @@
     return _callActionDict;
 }
 
-- (NSMutableArray *)extendNameArr
+- (NSMutableDictionary *)extendNameDict
 {
-    if (!_extendNameArr) {
-        _extendNameArr = [NSMutableArray array];
+    if (!_extendNameDict) {
+        _extendNameDict = [NSMutableDictionary dictionary];
     }
-    return _extendNameArr;
+    return _extendNameDict;
 }
 
 - (void)rulesWithWebView:(UIWebView *)webView
 {
     [super rulesWithWebView:webView];
-    for (int i =0; i < [self.extendNameArr count]; i++) {
-        NSString *key = [self.extendNameArr objectAtIndex:i];
-        self.context[key] = self;
+    for (int i =0; i < [self.extendNameDict.allValues count]; i++) {
+        NSDictionary *dict = [self.extendNameDict.allValues objectAtIndex:i];
+        self.context[dict[@"extendName"]] = dict[@"target"];
     }
     for (NSString *name in self.callActionDict) {
         NSInvocation *invocation = [self.callActionDict objectForKey:name];
         self.context[name] = ^(id obj)
         {
-#ifdef DEBUG
-            NSLog(@"传递参数%@",obj);
-#endif
-            id retrunvalue = nil;
+            void *retrunvalue = NULL;
             [invocation setArgument:&obj atIndex:2];
             [invocation invoke];
+            
+            NSLog(@"%s",invocation.methodSignature.methodReturnType);
+            
             if (invocation.methodSignature.methodReturnLength != 0) {
                 [invocation getReturnValue:&retrunvalue];
             }
-            return retrunvalue;
+            return (__bridge id)retrunvalue;
         };
     }
 }
 
-- (void)addAction:(SEL)action target:(id)target name:(NSString *)name
+- (void)ly_addAction:(SEL)action target:(id)target name:(NSString *)name
 {
-    NSMethodSignature *signature = [self methodSignatureForSelector:action];
+    NSMethodSignature *signature = [target methodSignatureForSelector:action];
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     invocation.target = target;
     invocation.selector = action;
     if (self.context) {
         self.context[name] = ^(id obj)
         {
-#ifdef DEBUG
-            NSLog(@"传递参数%@",obj);
-#endif
             id retrunvalue = nil;
             [invocation setArgument:&obj atIndex:2];
             [invocation invoke];
@@ -83,12 +81,41 @@
     }
 }
 
-- (void)addExtendName:(NSString *)extendName
+- (void)ly_removeActionWithName:(NSString *)name
+{
+    if ([[self.callActionDict allKeys] containsObject:name]) {
+        self.context[name] = nil;
+        [self.callActionDict removeObjectForKey:name];
+    }
+}
+
+- (void)ly_addExtendName:(NSString *)extendName target:(id)target
 {
     if (self.context) {
-        self.context[extendName] = self;
+        self.context[extendName] = target;
     } else {
-        [self.extendNameArr addObject:extendName];
+        [self.extendNameDict setObject:@{
+                                         @"extendName": extendName,
+                                         @"target": target
+                                         } forKey:extendName];
+    }
+}
+
+- (void)ly_removeExtendName:(NSString *)extendName
+{
+    if ([[self.extendNameDict allKeys] containsObject:extendName]) {
+        self.context[extendName] = nil;
+        [self.extendNameDict removeObjectForKey:extendName];
+    }
+}
+
+- (void)ly_evaluateResponse:(NSDictionary *)response name:(NSString *)name
+{
+    NSData *dictData = [NSJSONSerialization dataWithJSONObject:response options:(NSJSONWritingPrettyPrinted) error:nil];
+    NSString *dictStr = [[NSString alloc] initWithData:dictData encoding:NSUTF8StringEncoding];
+    NSString *textJS = [NSString stringWithFormat:@"%@(%@)",name,dictStr];
+    if (self.context) {
+        [self.context evaluateScript:textJS];
     }
 }
 

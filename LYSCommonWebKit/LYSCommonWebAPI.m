@@ -83,28 +83,4 @@
     }
 }
 
-- (void)evaluateResponse:(NSDictionary *)resonse success:(BOOL)success message:(NSString *)message bridge:(LYSBridgeInfo *)bridge
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSArray<LYSBridgeInfo *> *tempAry = [self getBridgesWith:bridge.bridgeName];
-        for (LYSBridgeInfo *model in tempAry)
-        {
-            NSData *dictData = [NSJSONSerialization dataWithJSONObject:@{
-                                                                         @"bridgeName":model.bridgeName,
-                                                                         @"message":message,
-                                                                         @"success":@(success),
-                                                                         @"data":resonse,
-                                                                         @"callbackId":model.callbackId
-                                                                         } options:(NSJSONWritingPrettyPrinted) error:nil];
-            NSString *dictStr = [[NSString alloc] initWithData:dictData encoding:NSUTF8StringEncoding];
-#ifdef DEBUG
-            NSLog(@"响应参数%@",dictStr);
-#endif
-            NSString *textJS = [NSString stringWithFormat:@"%@(%@)",LYSJsBridgeInvokeName,dictStr];
-            [self.context evaluateScript:textJS];
-            [self removeBridge:model];
-        }
-    });
-}
-
 @end

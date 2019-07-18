@@ -7,10 +7,11 @@
 //
 
 #import "LYSCommonWebUI.h"
+#import "NSObject+LYSCommonWebKit.h"
 
 @interface LYSCommonWebUI ()<UIWebViewDelegate>
 
-@property (nonatomic, strong, readwrite) UIWebView *webView;
+@property (nonatomic, strong, readwrite) LYSCommonWebView *webView;
 @property (nonatomic, strong, readwrite) JSContext *context;
 
 @property (nonatomic, strong) UILabel *stateLabel;
@@ -20,11 +21,20 @@
 
 @implementation LYSCommonWebUI
 
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didCreateJavaScriptContext:) name:@"lys_didCreateJavaScriptContext" object:nil];
+    }
+    return self;
+}
+
 - (UIWebView *)webView
 {
     if (!_webView)
     {
-        _webView = [[UIWebView alloc] init];
+        _webView = [[LYSCommonWebView alloc] init];
         _webView.delegate = self;
         _webView.scrollView.scrollEnabled = NO;
     }
@@ -53,7 +63,13 @@
     return _stateLabel;
 }
 
-- (void)loadUrl:(NSString *)urlStr
+- (void)setJsDelegate:(id<LYSCommonWebJavaScriptDelegate>)jsDelegate
+{
+    _jsDelegate = jsDelegate;
+    self.webView.jsDelegate = _jsDelegate;
+}
+
+- (void)ly_loadUrl:(NSString *)urlStr
 {
     NSURL *url = [[NSURL alloc] initWithString:urlStr];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
@@ -71,20 +87,24 @@
 {
     [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitUserSelect='none';"];
     [webView stringByEvaluatingJavaScriptFromString:@"document.documentElement.style.webkitTouchCallout='none';"];
-    self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+    //    self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     NSLog(@"success load WebView!!");
     [self hiddenHUD];
-    [self rulesWithWebView:webView];
+}
+
+- (void)didCreateJavaScriptContext:(NSNotification *)notifition
+{
+    self.context = notifition.userInfo[@"context"];
+    [self rulesWithWebView:self.webView];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     NSLog(@"error, fail loadWebView");
-    NSLog(@"%@",error);
     [self hiddenHUD];
     [self showText:error.localizedDescription time:2];
 }
@@ -172,5 +192,9 @@
     } completion:^(BOOL finished) {
         [self.stateLabel removeFromSuperview];
     }];
+}
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

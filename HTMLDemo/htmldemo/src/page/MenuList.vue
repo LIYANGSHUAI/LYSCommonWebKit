@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <div class="itemBox" v-for="(item, index) in menuList" :key="index" @click="itemClickAction(index)">
-      {{item}}
-    </div>
+    <div @click="clickAction" class="btn">点击{{name}}</div>
   </div>
 </template>
 
@@ -11,24 +9,28 @@ export default {
   name: 'MenuList',
   data () {
     return {
-      menuList: [
-        '利用bridge实现交互',
-        '直接在window上绑定事件'
-      ]
+      name: ''
     }
   },
   created () {
-    this.$store.dispatch('setNavTitle', 'API使用')
+    let obj = window.addValue('vue  to  ios!!!')
+    this.name = obj.name
+  },
+  mounted () {
+
   },
   methods: {
-    itemClickAction (index) {
-      let str = this.menuList[index]
-      this.$router.push({
-        path: '/content',
-        query: {
-          navTitle: str
-        }
-      })
+    clickAction: function () {
+      // window.JsBridgeBind('addValue', function (res) {
+      //   console.log(res)
+      // }, {
+      //   params: 'vue  to  ios!!!'
+      // })
+
+      // console.log(window.addValue('vue  to  ios!!!'))
+
+      let obj = window.addValue('vue  to  ios!!!')
+      this.name = obj.name
     }
   }
 }
@@ -40,12 +42,7 @@ export default {
     height: 100%;
     background-color: #eee;
   }
-  .itemBox {
-    width: 100%;
-    height: 50px;
-    border-bottom: 1px #ddd solid;
-    line-height: 50px;
-    text-align: left;
-    padding: 15px;
+  .btn {
+    margin-top: 100px;
   }
 </style>

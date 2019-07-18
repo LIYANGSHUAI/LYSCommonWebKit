@@ -33,9 +33,6 @@
         __weak LYSCommonWebBridge *WeakSelf = self;
         self.context[LYScallNativeBridgeApiName] = ^(id obj)
         {
-#ifdef DEBUG
-            NSLog(@"传递参数%@",obj);
-#endif
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *bridgeName = obj[@"bridgeName"];
                 NSString *callbackId = obj[@"callbackId"];
@@ -50,9 +47,7 @@
 
 - (void)callNativeBridgeApi:(id)obj
 {
-#ifdef DEBUG
-    NSLog(@"传递参数%@",obj);
-#endif
+    NSLog(@"%@",obj);
     __weak LYSCommonWebBridge *WeakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *bridgeName = obj[@"bridgeName"];
@@ -71,18 +66,42 @@
     [invocation invoke];
 }
 
-- (void)addAsynAction:(SEL)action target:(id)target name:(NSString *)name
+- (void)ly_addAsynAction:(SEL)action target:(id)target name:(NSString *)name
 {
-    NSMethodSignature *signature = [self methodSignatureForSelector:action];
+    NSMethodSignature *signature = [target methodSignatureForSelector:action];
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
     invocation.target = target;
     invocation.selector = action;
     [self.actionDict setObject:invocation forKey:name];
 }
 
-- (void)removeAsynActionWithName:(NSString *)name
+- (void)ly_removeAsynActionWithName:(NSString *)name
 {
-    [self.actionDict removeObjectForKey:name];
+    if ([[self.actionDict allKeys] containsObject:name]) {
+        [self.actionDict removeObjectForKey:name];
+    }
 }
+
+- (void)ly_evaluateResponse:(NSDictionary *)response success:(BOOL)success message:(NSString *)message bridge:(LYSBridgeInfo *)bridge
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSArray<LYSBridgeInfo *> *tempAry = [self getBridgesWith:bridge.bridgeName];
+        for (LYSBridgeInfo *model in tempAry)
+        {
+            NSData *dictData = [NSJSONSerialization dataWithJSONObject:@{
+                                                                         @"bridgeName":model.bridgeName,
+                                                                         @"message":message,
+                                                                         @"success":@(success),
+                                                                         @"data":response,
+                                                                         @"callbackId":model.callbackId
+                                                                         } options:(NSJSONWritingPrettyPrinted) error:nil];
+            NSString *dictStr = [[NSString alloc] initWithData:dictData encoding:NSUTF8StringEncoding];
+            NSString *textJS = [NSString stringWithFormat:@"%@(%@)",LYSJsBridgeInvokeName,dictStr];
+            [self.context evaluateScript:textJS];
+            [self removeBridge:model];
+        }
+    });
+}
+
 
 @end
