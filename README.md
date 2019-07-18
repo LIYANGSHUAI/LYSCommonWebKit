@@ -67,3 +67,58 @@ window.JsBridgeBind('addValue', function (res) {
 {"data":{"result":"ios  to  vue!!"},"success":true,"message":"success!"}
 ```
 
+方式二:
+```objc
+// iOS端代码
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+
+    self.webView = [[LYSCommonWeb alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:self.webView];
+
+    if (@available(iOS 11.0, *)) {
+        self.webView.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
+    
+    [self.webView ly_loadUrl:@"http://0.0.0.0:8080"];
+    
+    self.webView.extendName = @"ios";
+    [self.webView ly_addAsynAction:@selector(addValue:) target:self name:@"addValue"];
+    
+}
+
+- (void)addValue:(LYSBridgeInfo *)info
+{
+    NSLog(@"收到响应数据: %@",info.allParms);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.webView ly_evaluateResponse:@{
+                                         @"result": @"ios  to  vue!!"
+                                         } success:YES message:@"success!" bridge:info];
+    });
+}
+```
+```js
+// js端代码
+window.JsBridgeBind('addValue', function (res) {
+        console.log(JSON.stringify(res))
+      }, {
+        params: 'vue  to  ios!!!'
+      })
+```
+```objc
+// iOS端打印
+2019-07-18 14:48:12.842 LYSCommonWebKitDemo[6503:196164] 收到响应数据: {
+    bridgeName = addValue;
+    callbackId = 2;
+    parms =     {
+        params = "vue  to  ios!!!";
+    };
+}
+```
+```js
+// js端代码
+{"data":{"result":"ios  to  vue!!"},"success":true,"message":"success!"}
+```
