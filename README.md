@@ -165,10 +165,60 @@ console.log(window.addValue('vue  to  ios!!'))
 // js端打印
 {result: "ios  to vue!!!"}
 ```
+方式四
+```objc
+// iOS 端代码
+@protocol LYSCommonWebKitActionDelegate <JSExport>
 
+- (id)addValue:(id)obj;
 
+@end
+@interface ViewController ()<LYSCommonWebKitActionDelegate>
 
+@property (nonatomic, strong) LYSCommonWeb *webView;
 
+@end
 
+@implementation ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+
+    self.webView = [[LYSCommonWeb alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:self.webView];
+
+    if (@available(iOS 11.0, *)) {
+        self.webView.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
+    
+    [self.webView ly_loadUrl:@"http://0.0.0.0:8080"];
+    
+    [self.webView ly_addExtendName:@"ios" target:self];
+    
+}
+
+- (id)addValue:(id)obj
+{
+    NSLog(@"收到响应数据: %@", obj);
+    return @{
+             @"result": @"ios  to vue!!!"
+             };
+}
+```
+```js
+// js端代码
+console.log(window.ios.addValue('vue  to  ios!!'))
+```
+```objc
+// iOS 端打印
+收到响应数据: vue  to  ios!!
+```
+```js
+// js端打印
+{result: "ios  to vue!!!"}
+```
 
 
