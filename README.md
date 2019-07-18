@@ -1,6 +1,8 @@
 # LYSCommonWebKit
 解决开发中,H5与原生混合过程中,js和原生交互繁琐,逻辑复杂,频繁交换数据的问题
 
+![iOS技术群群二维码](https://github.com/LIYANGSHUAI/LYSDatePicker/blob/master/resource/iOS技术群群二维码.JPG)
+
 解决下移20像素问题:
 ```objc
 if (@available(iOS 11.0, *)) {
