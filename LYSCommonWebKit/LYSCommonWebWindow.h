@@ -34,9 +34,10 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param action 事件
  @param target 对象
+ @param argNum 参数个数,默认是0,1,2,3
  @param name 方法名
  */
-- (void)ly_addAction:(SEL)action target:(id)target name:(NSString *)name;
+- (void)ly_addAction:(SEL)action target:(id)target argNum:(NSInteger)argNum name:(NSString *)name;
 - (void)ly_removeActionWithName:(NSString *)name;
 
 

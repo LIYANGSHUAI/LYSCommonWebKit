@@ -7,6 +7,7 @@
 //
 
 #import "LYSCommonWebWindow.h"
+#import <objc/runtime.h>
 
 @interface LYSCommonWebWindow ()
 
@@ -43,36 +44,142 @@
     }
     for (NSString *name in self.callActionDict) {
         NSInvocation *invocation = [self.callActionDict objectForKey:name];
-        self.context[name] = ^(id obj)
-        {
-            void *retrunvalue = NULL;
-            [invocation setArgument:&obj atIndex:2];
-            [invocation invoke];
-            if (invocation.methodSignature.methodReturnLength != 0) {
-                [invocation getReturnValue:&retrunvalue];
+        NSInteger argNum = [objc_getAssociatedObject(invocation, (__bridge const void *)(@"argNum")) integerValue];
+        switch (argNum) {
+            case 0:
+            {
+                self.context[name] = ^()
+                {
+                    void *retrunValue = NULL;
+                    [invocation invoke];
+                    if (invocation.methodSignature.methodReturnLength != 0) {
+                        [invocation getReturnValue:&retrunValue];
+                    }
+                    return (__bridge id)retrunValue;
+                };
             }
-            return (__bridge id)retrunvalue;
-        };
+                break;
+            case 1:
+            {
+                self.context[name] = ^(id obj)
+                {
+                    void *retrunValue = NULL;
+                    [invocation setArgument:&obj atIndex:2];
+                    [invocation invoke];
+                    if (invocation.methodSignature.methodReturnLength != 0) {
+                        [invocation getReturnValue:&retrunValue];
+                    }
+                    return (__bridge id)retrunValue;
+                };
+            }
+                break;
+            case 2:
+            {
+                self.context[name] = ^(id obj1, id obj2)
+                {
+                    void *retrunValue = NULL;
+                    [invocation setArgument:&obj1 atIndex:2];
+                    [invocation setArgument:&obj2 atIndex:3];
+                    [invocation invoke];
+                    if (invocation.methodSignature.methodReturnLength != 0) {
+                        [invocation getReturnValue:&retrunValue];
+                    }
+                    return (__bridge id)retrunValue;
+                };
+            }
+                break;
+            case 3:
+            {
+                self.context[name] = ^(id obj1, id obj2, id obj3)
+                {
+                    void *retrunValue = NULL;
+                    [invocation setArgument:&obj1 atIndex:2];
+                    [invocation setArgument:&obj2 atIndex:3];
+                    [invocation setArgument:&obj3 atIndex:4];
+                    [invocation invoke];
+                    if (invocation.methodSignature.methodReturnLength != 0) {
+                        [invocation getReturnValue:&retrunValue];
+                    }
+                    return (__bridge id)retrunValue;
+                };
+            }
+                break;
+            default:
+                break;
+        }
     }
 }
 
-- (void)ly_addAction:(SEL)action target:(id)target name:(NSString *)name
+- (void)ly_addAction:(SEL)action target:(id)target argNum:(NSInteger)argNum name:(NSString *)name
 {
     NSMethodSignature *signature = [target methodSignatureForSelector:action];
     NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    objc_setAssociatedObject(invocation, (__bridge const void *)(@"argNum"), @(argNum), OBJC_ASSOCIATION_ASSIGN);
     invocation.target = target;
     invocation.selector = action;
     if (self.context) {
-        self.context[name] = ^(id obj)
-        {
-            id retrunvalue = nil;
-            [invocation setArgument:&obj atIndex:2];
-            [invocation invoke];
-            if (invocation.methodSignature.methodReturnLength != 0) {
-                [invocation getReturnValue:&retrunvalue];
+        switch (argNum) {
+            case 0:
+            {
+                self.context[name] = ^()
+                {
+                    void *retrunValue = NULL;
+                    [invocation invoke];
+                    if (invocation.methodSignature.methodReturnLength != 0) {
+                        [invocation getReturnValue:&retrunValue];
+                    }
+                    return (__bridge id)retrunValue;
+                };
             }
-            return retrunvalue;
-        };
+                break;
+            case 1:
+            {
+                self.context[name] = ^(id obj)
+                {
+                    void *retrunValue = NULL;
+                    [invocation setArgument:&obj atIndex:2];
+                    [invocation invoke];
+                    if (invocation.methodSignature.methodReturnLength != 0) {
+                        [invocation getReturnValue:&retrunValue];
+                    }
+                    return (__bridge id)retrunValue;
+                };
+            }
+                break;
+            case 2:
+            {
+                self.context[name] = ^(id obj1, id obj2)
+                {
+                    void *retrunValue = NULL;
+                    [invocation setArgument:&obj1 atIndex:2];
+                    [invocation setArgument:&obj2 atIndex:3];
+                    [invocation invoke];
+                    if (invocation.methodSignature.methodReturnLength != 0) {
+                        [invocation getReturnValue:&retrunValue];
+                    }
+                    return (__bridge id)retrunValue;
+                };
+            }
+                break;
+            case 3:
+            {
+                self.context[name] = ^(id obj1, id obj2, id obj3)
+                {
+                    void *retrunValue = NULL;
+                    [invocation setArgument:&obj1 atIndex:2];
+                    [invocation setArgument:&obj2 atIndex:3];
+                    [invocation setArgument:&obj3 atIndex:4];
+                    [invocation invoke];
+                    if (invocation.methodSignature.methodReturnLength != 0) {
+                        [invocation getReturnValue:&retrunValue];
+                    }
+                    return (__bridge id)retrunValue;
+                };
+            }
+                break;
+            default:
+                break;
+        }
     } else {
         [self.callActionDict setObject:invocation forKey:name];
     }

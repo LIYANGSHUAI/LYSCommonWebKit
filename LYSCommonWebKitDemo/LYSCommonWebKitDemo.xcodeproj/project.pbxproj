@@ -20,6 +20,7 @@
 		CC3337A722E03FC30007FCC6 /* LYSCommonWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3337A622E03FC30007FCC6 /* LYSCommonWebView.m */; };
 		CC3337AA22E0409C0007FCC6 /* UIView+LYSCommonWebKit.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3337A922E0409C0007FCC6 /* UIView+LYSCommonWebKit.m */; };
 		CC3337AD22E0415C0007FCC6 /* NSObject+LYSCommonWebKit.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3337AC22E0415C0007FCC6 /* NSObject+LYSCommonWebKit.m */; };
+		CC7612CF22FBB9BF00F31C0D /* LYSCommonWebKit.podspec in Resources */ = {isa = PBXBuildFile; fileRef = CC7612CE22FBB9BF00F31C0D /* LYSCommonWebKit.podspec */; };
 		CC93205B22DF0B8200B9BFCF /* LYSCommonWebUI.m in Sources */ = {isa = PBXBuildFile; fileRef = CC93205A22DF0B8200B9BFCF /* LYSCommonWebUI.m */; };
 		CC93205E22DF0DAC00B9BFCF /* LYSCommonWebBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = CC93205D22DF0DAC00B9BFCF /* LYSCommonWebBridge.m */; };
 		CC93206122DF0E4B00B9BFCF /* LYSCommonWebAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = CC93206022DF0E4B00B9BFCF /* LYSCommonWebAPI.m */; };
@@ -69,6 +70,7 @@
 		CC3337A922E0409C0007FCC6 /* UIView+LYSCommonWebKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+LYSCommonWebKit.m"; sourceTree = "<group>"; };
 		CC3337AB22E0415C0007FCC6 /* NSObject+LYSCommonWebKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+LYSCommonWebKit.h"; sourceTree = "<group>"; };
 		CC3337AC22E0415C0007FCC6 /* NSObject+LYSCommonWebKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+LYSCommonWebKit.m"; sourceTree = "<group>"; };
+		CC7612CE22FBB9BF00F31C0D /* LYSCommonWebKit.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LYSCommonWebKit.podspec; path = ../../LYSCommonWebKit.podspec; sourceTree = "<group>"; };
 		CC93205922DF0B8200B9BFCF /* LYSCommonWebUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LYSCommonWebUI.h; sourceTree = "<group>"; };
 		CC93205A22DF0B8200B9BFCF /* LYSCommonWebUI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LYSCommonWebUI.m; sourceTree = "<group>"; };
 		CC93205C22DF0DAC00B9BFCF /* LYSCommonWebBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LYSCommonWebBridge.h; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				CC1D5A7F22DEDED60024232A /* ViewController.h */,
 				CC1D5A8022DEDED60024232A /* ViewController.m */,
 				CC3337A022E00C8D0007FCC6 /* README.md */,
+				CC7612CE22FBB9BF00F31C0D /* LYSCommonWebKit.podspec */,
 				CC1D5AAE22DEE8F00024232A /* LYSCommonWebKit */,
 				CC1D5A8222DEDED60024232A /* Main.storyboard */,
 				CC1D5A8522DEDED80024232A /* Assets.xcassets */,
@@ -289,6 +292,7 @@
 			files = (
 				CC1D5A8922DEDED80024232A /* LaunchScreen.storyboard in Resources */,
 				CC1D5A8622DEDED80024232A /* Assets.xcassets in Resources */,
+				CC7612CF22FBB9BF00F31C0D /* LYSCommonWebKit.podspec in Resources */,
 				CC3337A122E00C8D0007FCC6 /* README.md in Resources */,
 				CC1D5A8422DEDED60024232A /* Main.storyboard in Resources */,
 			);
