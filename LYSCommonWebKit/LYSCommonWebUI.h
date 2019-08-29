@@ -14,6 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class LYSBridgeInfo;
 
+@protocol LYSCommonLifeDelegate <NSObject>
+
+@optional
+- (void)webViewDidLoad;
+- (void)webViewDidFailWithError:(NSError *)errror;
+
+@end
+
 @protocol LYSCommonWebAPIDelegate <NSObject>
 
 @optional
@@ -23,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface LYSCommonWebUI : UIView<LYSCommonWebAPIDelegate>
+
+@property (nonatomic, assign) id<LYSCommonLifeDelegate> delegate;
 
 @property (nonatomic, strong, readonly) LYSCommonWebView *webView;
 @property (nonatomic, assign) id<LYSCommonWebJavaScriptDelegate> jsDelegate;

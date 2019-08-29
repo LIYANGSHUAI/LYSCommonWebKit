@@ -94,6 +94,11 @@
 {
     NSLog(@"success load WebView!!");
     [self hiddenHUD];
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidLoad)]) {
+        [self.delegate webViewDidLoad];
+    }
+    
 }
 
 - (void)didCreateJavaScriptContext:(NSNotification *)notifition
@@ -107,6 +112,9 @@
     NSLog(@"error, fail loadWebView");
     [self hiddenHUD];
     [self showText:error.localizedDescription time:2];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidFailWithError:)]) {
+        [self.delegate webViewDidFailWithError:error];
+    }
 }
 
 - (void)showHUD
