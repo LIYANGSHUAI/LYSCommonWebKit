@@ -49,10 +49,10 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [super webViewDidFinishLoad:webView];
+    [self hiddenHUD];
     if (self.monitorEnable) {
         self.monitorEnable = NO;
         NSLog(@"success load WebView!!");
-        [self hiddenHUD];
         if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidFinishOnceLoad:)]) {
             [self.delegate webViewDidFinishOnceLoad:self];
         }
