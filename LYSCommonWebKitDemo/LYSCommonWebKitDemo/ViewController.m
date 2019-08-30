@@ -16,7 +16,7 @@
 
 @end
 
-@interface ViewController ()<LYSCommonWebKitActionDelegate>
+@interface ViewController ()<LYSCommonWebKitActionDelegate,LYSCommonLifeDelegate>
 @property (nonatomic, strong) LYSCommonWeb *webView;
 @end
 
@@ -28,17 +28,33 @@
 
     self.webView = [[LYSCommonWeb alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:self.webView];
-
+    self.webView.delegate = self;
+    
     if (@available(iOS 11.0, *)) {
         self.webView.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     
-    [self.webView ly_loadUrl:@"http://0.0.0.0:8080"];
+    [self.webView ly_loadUrl:@"http://www.baidu.com"];
     
     [self.webView ly_addExtendName:@"ios" target:self];
     
+}
+
+- (void)webViewDidFinishOnceLoad:(LYSCommonWeb *)webView
+{
+    NSLog(@"第一次!");
+}
+
+- (void)webViewDidFinishLoad:(LYSCommonWeb *)webView
+{
+    NSLog(@"成功!!!");
+}
+
+- (void)webView:(LYSCommonWeb *)webView didFailLoadWithError:(NSError *)error
+{
+    NSLog(@"%@",error);
 }
 
 - (id)addValue:(id)obj

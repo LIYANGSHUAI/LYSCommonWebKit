@@ -80,7 +80,6 @@
     NSArray *h = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_webView]|" options:(0) metrics:@{} views:NSDictionaryOfVariableBindings(_webView)];
     [self addConstraints:w];
     [self addConstraints:h];
-    [self showHUD];
 }
 
 - (void)rulesWithWebView:(UIWebView *)webView
@@ -90,32 +89,19 @@
     //    self.context = [webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-    NSLog(@"success load WebView!!");
-    [self hiddenHUD];
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidLoad)]) {
-        [self.delegate webViewDidLoad];
-    }
-    
-}
-
 - (void)didCreateJavaScriptContext:(NSNotification *)notifition
 {
     self.context = notifition.userInfo[@"context"];
     [self rulesWithWebView:self.webView];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+- (void)webViewDidFinishLoad:(UIWebView *)webView {}
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {}
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    NSLog(@"error, fail loadWebView");
-    [self hiddenHUD];
-    [self showText:error.localizedDescription time:2];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidFailWithError:)]) {
-        [self.delegate webViewDidFailWithError:error];
-    }
+    return YES;
 }
+- (void)webViewDidStartLoad:(UIWebView *)webView {}
 
 - (void)showHUD
 {

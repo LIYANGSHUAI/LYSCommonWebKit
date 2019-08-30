@@ -12,13 +12,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class LYSBridgeInfo;
+@class LYSBridgeInfo,LYSCommonWeb;
 
 @protocol LYSCommonLifeDelegate <NSObject>
 
 @optional
-- (void)webViewDidLoad;
-- (void)webViewDidFailWithError:(NSError *)errror;
+/// 默认只监听第一次加载页面
+- (void)webViewDidStartOnceLoad:(LYSCommonWeb *)webView;
+- (void)webViewDidFinishOnceLoad:(LYSCommonWeb *)webView;
+- (void)webView:(LYSCommonWeb *)webView didFailOnceLoadWithError:(NSError *)error;
+- (BOOL)webView:(LYSCommonWeb *)webView shouldStartOnceLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+/// 监听每次页面加载
+- (BOOL)webView:(LYSCommonWeb *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+- (void)webViewDidStartLoad:(LYSCommonWeb *)webView;
+- (void)webViewDidFinishLoad:(LYSCommonWeb *)webView;
+- (void)webView:(LYSCommonWeb *)webView didFailLoadWithError:(NSError *)error;
 
 @end
 
@@ -32,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LYSCommonWebUI : UIView<LYSCommonWebAPIDelegate>
 
+// 监听代理
 @property (nonatomic, assign) id<LYSCommonLifeDelegate> delegate;
 
 @property (nonatomic, strong, readonly) LYSCommonWebView *webView;
@@ -44,6 +53,15 @@ NS_ASSUME_NONNULL_BEGIN
  @param urlStr 网页url
  */
 - (void)ly_loadUrl:(NSString *)urlStr;
+
+- (void)showHUD;
+- (void)hiddenHUD;
+- (void)showText:(NSString *)text time:(NSInteger)time;
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+- (void)webViewDidStartLoad:(UIWebView *)webView;
+- (void)webViewDidFinishLoad:(UIWebView *)webView;
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;
 
 @end
 
