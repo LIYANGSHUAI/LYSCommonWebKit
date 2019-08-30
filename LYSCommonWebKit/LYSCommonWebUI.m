@@ -105,6 +105,10 @@
 
 - (void)showHUD
 {
+    if (self.hudView) {
+        [self.hudView removeFromSuperview];
+        self.hudView = nil;
+    }
     self.hudView.alpha = 0;
     [self addSubview:self.hudView];
     [UIView animateWithDuration:0.5 animations:^{

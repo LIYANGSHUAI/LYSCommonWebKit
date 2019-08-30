@@ -40,6 +40,11 @@
     
     [self.webView ly_addExtendName:@"ios" target:self];
     
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.webView ly_loadUrl:@"http://www.baidu.com"];
+    });
+    
 }
 
 - (void)webViewDidFinishOnceLoad:(LYSCommonWeb *)webView

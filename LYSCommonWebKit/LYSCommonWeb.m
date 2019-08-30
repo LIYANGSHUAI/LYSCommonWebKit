@@ -18,8 +18,10 @@
 - (void)ly_loadUrl:(NSString *)urlStr
 {
     [super ly_loadUrl:urlStr];
-    [self showHUD];
-    self.monitorEnable = YES;
+    if (self.monitorEnable==NO) {
+        [self showHUD];
+        self.monitorEnable = YES;
+    }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -50,9 +52,9 @@
 {
     [super webViewDidFinishLoad:webView];
     [self hiddenHUD];
+    NSLog(@"success load WebView!!");
     if (self.monitorEnable) {
         self.monitorEnable = NO;
-        NSLog(@"success load WebView!!");
         if (self.delegate && [self.delegate respondsToSelector:@selector(webViewDidFinishOnceLoad:)]) {
             [self.delegate webViewDidFinishOnceLoad:self];
         }
@@ -64,10 +66,11 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     [super webView:webView didFailLoadWithError:error];
+    NSLog(@"error, fail loadWebView");
+    [self hiddenHUD];
+    [self showText:error.localizedDescription time:2];
     if (self.monitorEnable) {
-        NSLog(@"error, fail loadWebView");
-        [self hiddenHUD];
-        [self showText:error.localizedDescription time:2];
+        self.monitorEnable = NO;
         if (self.delegate && [self.delegate respondsToSelector:@selector(webView:didFailOnceLoadWithError:)]) {
             [self.delegate webView:self didFailOnceLoadWithError:error];
         }
